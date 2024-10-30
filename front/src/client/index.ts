@@ -1,0 +1,62 @@
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export { ApiError } from './core/ApiError';
+export { CancelablePromise, CancelError } from './core/CancelablePromise';
+export { OpenAPI } from './core/OpenAPI';
+export type { OpenAPIConfig } from './core/OpenAPI';
+
+export type { AuthToken } from './models/AuthToken';
+export type { AuthTokenRequest } from './models/AuthTokenRequest';
+export type { Company } from './models/Company';
+export type { CompanyContract } from './models/CompanyContract';
+export type { CompanyContractRequest } from './models/CompanyContractRequest';
+export type { CompanyShort } from './models/CompanyShort';
+export type { CompanyShortRequest } from './models/CompanyShortRequest';
+export { CompanyStatusEnum } from './models/CompanyStatusEnum';
+export type { FileUploadResponse } from './models/FileUploadResponse';
+export type { FKKO } from './models/FKKO';
+export type { FKKORequest } from './models/FKKORequest';
+export type { GlobalPreference } from './models/GlobalPreference';
+export type { GlobalPreferenceRequest } from './models/GlobalPreferenceRequest';
+export type { Landfill } from './models/Landfill';
+export type { LandfillRequest } from './models/LandfillRequest';
+export type { NonComplianceReport } from './models/NonComplianceReport';
+export type { NonComplianceReportRequest } from './models/NonComplianceReportRequest';
+export type { PaginatedCompanyContractList } from './models/PaginatedCompanyContractList';
+export type { PaginatedCompanyList } from './models/PaginatedCompanyList';
+export type { PaginatedGlobalPreferenceList } from './models/PaginatedGlobalPreferenceList';
+export type { PaginatedLandfillList } from './models/PaginatedLandfillList';
+export type { PaginatedNonComplianceReportList } from './models/PaginatedNonComplianceReportList';
+export type { PaginatedTicketList } from './models/PaginatedTicketList';
+export type { PaginatedUserList } from './models/PaginatedUserList';
+export type { PatchedCompanyContractRequest } from './models/PatchedCompanyContractRequest';
+export type { PatchedCompanyShortRequest } from './models/PatchedCompanyShortRequest';
+export type { PatchedFileUploadRequest } from './models/PatchedFileUploadRequest';
+export type { PatchedGlobalPreferenceRequest } from './models/PatchedGlobalPreferenceRequest';
+export type { PatchedLandfillRequest } from './models/PatchedLandfillRequest';
+export type { PatchedNonComplianceReportRequest } from './models/PatchedNonComplianceReportRequest';
+export type { PatchedTicketRequest } from './models/PatchedTicketRequest';
+export type { PatchedUserRequest } from './models/PatchedUserRequest';
+export { RoleEnum } from './models/RoleEnum';
+export type { StatusOk } from './models/StatusOk';
+export type { Ticket } from './models/Ticket';
+export type { TicketRequest } from './models/TicketRequest';
+export { TicketStatusEnum } from './models/TicketStatusEnum';
+export type { TicketTemplate } from './models/TicketTemplate';
+export type { User } from './models/User';
+export type { UserRegister } from './models/UserRegister';
+export type { UserRegisterRequest } from './models/UserRegisterRequest';
+export type { UserRequest } from './models/UserRequest';
+export type { UserSetPasswordRequest } from './models/UserSetPasswordRequest';
+export type { UserShort } from './models/UserShort';
+
+export { ApiService } from './services/ApiService';
+export { AuthService } from './services/AuthService';
+export { CompaniesService } from './services/CompaniesService';
+export { ContractsService } from './services/ContractsService';
+export { GlobalService } from './services/GlobalService';
+export { LandfillsService } from './services/LandfillsService';
+export { ReportsService } from './services/ReportsService';
+export { TicketsService } from './services/TicketsService';
+export { UsersService } from './services/UsersService';
