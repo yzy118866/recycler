@@ -35,10 +35,10 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", False) == "True"
-PRODUCTION = os.environ.get("PRODUCTION", False) == "True"
+DEBUG = os.environ.get("DEBUG", False)
+PRODUCTION = os.environ.get("PRODUCTION", False)
 
-default_hosts = ["178.140.94.173", "localhost", "web"]
+default_hosts = ["178.140.94.173", "localhost"]
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", ",".join(default_hosts)).split(",")
 USE_X_FORWARDED_HOST = True
 HOSTNAME_OVERRIDE = os.getenv("HOSTNAME_OVERRIDE", None)
@@ -183,7 +183,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = "static_root"
-STATICFILES_DURS = ["static", "dist_static"]
+STATICFILES_DIRS = ["static", "dist_static"]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"

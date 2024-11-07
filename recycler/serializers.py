@@ -211,7 +211,7 @@ class CompanySerializer(AuthorSerializer, WritableNestedModelSerializer):
 
     landfill = LandfillSerializer(read_only=True, required=False)
     landfill_id = serializers.PrimaryKeyRelatedField(
-        queryset=Landfill.objects.all(), source="landfill", write_only=True
+        queryset=Landfill.objects.all(), source="landfill", write_only=True, required=False
     )
 
     class Meta:

@@ -11,28 +11,29 @@ services:
     volumes:
       - .:/app
       - ./exports:/app/exports
-    restart: unless-stopped # unless-stopped on-failure
+      - ./media:/app/media
+    restart: unless-stopped
     deploy:
       resources:
         reservations:
           memory: 50M
         limits:
           memory: 200M
+    networks:
+      - app_net
 
   quasar:
     tty: true
     build:
       context: .
       dockerfile: Dockerfile.quasar
-    #          target: 'production-stage'
     ports:
       - '${NGINX_PORT:-8088}:80'
     volumes:
       - '.:/app'
       - './nginx.conf:/etc/nginx/nginx.conf'
       - './logs:/var/log/nginx/server'
-    links:
-      - 'web:web'
+      - './media:/app/media'
     healthcheck:
       test: 'curl -m 5 http://localhost'
       interval: 5s
@@ -43,8 +44,8 @@ services:
       resources:
         reservations:
           memory: 50M
-        # limits:
-        #   memory: 200M
+    networks:
+      - app_net
 
   huey:
     build:
@@ -58,6 +59,9 @@ services:
       resources:
         reservations:
           memory: 50M
-        # limits:
-        #   memory: 200M
+    networks:
+      - app_net
 
+networks:
+  app_net:
+    driver: bridge

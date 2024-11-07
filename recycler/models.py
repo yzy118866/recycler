@@ -60,7 +60,7 @@ class Company(ModelDates):
         verbose_name="Наименование площадки",
         related_name="companies",
         null=True,
-        blank=False,
+        blank=True,
     )
 
     customer = models.CharField(_("Заказчик"), max_length=100, null=True, blank=True)

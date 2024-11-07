@@ -170,8 +170,10 @@ const canEdit = computed(() => {
 })
 
 const contractOpenData = computed(() => {
-  return props.company.contracts?.find(c => c.id === contractOpen.value)
-})
+  const data = props.company.contracts?.find(c => c.id === contractOpen.value);
+  console.log("Contract Open Data:", data); // Добавь эту строку
+  return data;
+});
 
 const canShowIframe = computed(() => {
   return contractOpenData.value?.file?.endsWith(".pdf")
