@@ -1,5 +1,10 @@
 const routes = [
   {
+    path: '/no-role',
+    name: 'NoRole',
+    component: () => import("pages/user/NoRolePage.vue"),
+  },
+  {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
@@ -8,6 +13,7 @@ const routes = [
         component: () => import("pages/IndexPage.vue"),
         name: "index",
       },
+     
       {
         path: "companies",
         children: [
@@ -35,6 +41,11 @@ const routes = [
             path: "processing",
             component: () => import("pages/user/TicketsListProcessing.vue"),
             name: "tickets_processing",
+          },
+          {
+            path: "unload",
+            component: () => import("pages/user/TicketsListOnUnload.vue"),
+            name: "tickets_unload",
           },
           {
             path: "archive",

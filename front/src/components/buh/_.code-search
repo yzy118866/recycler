@@ -1,0 +1,34 @@
+# Query: Компании
+# ContextLines: 1
+
+Результаты: 6 - Файлы 6
+
+front/src/components/buh/CompaniesTable.vue:
+  25      ref="table"
+  26:     title="Заказчики"
+  27      :columns="tableColumns"
+
+front/src/components/buh/DialogCompanyCreate.vue:
+  8          v-model="company.name"
+  9:         label="Название компании"
+  10          outlined
+
+front/src/components/layout/MainAsideMenu.vue:
+  13        :to="{name: 'companies'}"
+  14:       label="Заказчики"
+  15      />
+
+front/src/components/user/SelectCompanyScreen.vue:
+  3      <div class="text-h5 text-bold text-center q-mb-md">
+  4:       Выбор компании
+  5      </div>
+
+front/src/pages/admin/CompanyView.vue:
+  71              v-model="item.name"
+  72:             label="Название компании"
+  73              :rules="[ruleRequired]"
+
+recycler/serializers.py:
+  170              if company.sum_actual is not None and company.sum_actual <= 0:
+  171:                 raise ValidationError("Недостаточный баланс компании")
+  172              validated_data["num"] = generate_ticket_num(company)

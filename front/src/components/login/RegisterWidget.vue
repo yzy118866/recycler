@@ -87,6 +87,7 @@ const registerDefaults = {
   password: "",
   password2: "",
   passwordShow: false,
+  
 
 }
 const register = ref(Object.assign({}, registerDefaults))

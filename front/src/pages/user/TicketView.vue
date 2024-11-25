@@ -9,10 +9,10 @@
   <q-page padding>
     <nav-top>
       <q-breadcrumbs-el
-        label="Тикеты"
+        label="Талоны"
         :to="{name: 'tickets_all'}"
       />
-      <q-breadcrumbs-el :label="`Тикет #${item?.id || ''}`" />
+      <q-breadcrumbs-el :label="'Талон #' + (item?.id || '')" />
     </nav-top>
 
     <base-form
@@ -24,7 +24,7 @@
           <key-value-info :data="infoData" />
         </div>
         <div class="row justify-around q-gutter-sm">
-          <template v-if="isExists && storeAuth.hasRole([RoleEnum.DISP, RoleEnum.OTV])">
+          <template v-if="isExists && storeAuth.hasRole(RoleEnum.OUTLEN)">
             <q-btn
               v-if="item.status == TicketStatusEnum.CR && item.approve_status === null"
               icon="pending"
@@ -35,18 +35,30 @@
               :loading="loading"
               @click="askUpdateTicketStatus(TicketStatusEnum.PR)"
             />
+          </template>
+          <template v-if="isExists && storeAuth.hasRole(RoleEnum.DISP)">
             <q-btn
               v-if="item.status == TicketStatusEnum.PR"
-              icon="archive"
-              label="Отправить в архив"
+              icon="send"
+              label="Отправить на выгрузку"
               color="secondary"
+              unelevated
+              no-caps
+              :loading="loading"
+              @click="askUpdateTicketStatus(TicketStatusEnum.PN)"
+            />
+            <q-btn
+              v-if="item.report_sent && item.approve_status === false && item.status !== TicketStatusEnum.AR"
+              label="Отправить в архив"
+              color="primary"
+              icon="archive"
               unelevated
               no-caps
               :loading="loading"
               @click="askUpdateTicketStatus(TicketStatusEnum.AR)"
             />
           </template>
-          <template v-if="isExists && storeAuth.hasRole(RoleEnum.OTV) && item.approve_status == null">
+          <template v-if="isExists && storeAuth.hasRole(RoleEnum.OTV) && item.approve_status == null && item.status == TicketStatusEnum.PN">
             <q-btn
               label="Одобрить"
               color="positive"
@@ -95,7 +107,7 @@
             @click="showReport = true"
           />
           <q-btn
-            v-else-if="storeAuth.hasRole(RoleEnum.DISP) && item.report_sent"
+            v-else-if="(storeAuth.hasRole(RoleEnum.DISP) || storeAuth.hasRole(RoleEnum.BUH_EXT) || storeAuth.hasRole(RoleEnum.BUH_INN)) && item.report_sent"
             :to="{name: 'report', params: {id: item.report_sent}}"
             label="Открыть акт о несоответствии"
             color="primary"
@@ -109,8 +121,9 @@
 
       <q-input
         v-model="item.num"
-        :readonly="readonly"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
+        :rules="getRulesForField('item.num')"
         autocomplete="off"
         label="Номер талона"
         outlined
@@ -118,8 +131,9 @@
 
       <q-input
         v-model="item.car_model"
-        :readonly="readonly"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
+        :rules="getRulesForField('car_model')"
         autocomplete="off"
         label="Марка машины"
         outlined
@@ -127,54 +141,67 @@
 
       <q-input
         v-model="item.car_num"
-        :readonly="readonly"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
+        :rules="getRulesForField('car_num')"
         autocomplete="off"
         label="Госномер машины"
         outlined
       />
       <q-input
         v-model="item.mass_full"
-        :readonly="readonly"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
+        :rules="getRulesForField('mass_full')"
         autocomplete="off"
         label="Масса полная"
         outlined
+        inputmode="decimal"
+        step="any"
       />
       <q-input
         v-model="item.mass_empty"
-        :readonly="readonly"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
+        :rules="getRulesForField('mass_empty')"
         autocomplete="off"
         label="Масса пустая"
         outlined
+        inputmode="decimal"
+        step="any"
       />
       <q-input
         v-model="item.ticket_volume"
-        :readonly="readonly"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
+        :rules="getRulesForField('ticket_volume')"
         autocomplete="off"
-        label="Объём талона"
+        label="Объём груза"
         outlined
+        inputmode="decimal"
+        step="any"
       />
       <q-input
         v-model="item.actual_volume"
-        :readonly="readonly"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
+        :rules="getRulesForField('actual_volume')"
         autocomplete="off"
-        label="Фактический объём"
+        label="Фактический объём груза"
         outlined
+        inputmode="decimal"
+        step="any"
       />
 
       <company-select
         v-model="item.company"
         hide-bottom-space
-        :rules="[ruleRequired]"
-        :readonly="readonly"
+        :rules="getRulesForField('company')"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
       />
 
       <div>
@@ -182,9 +209,9 @@
           v-if="item"
           v-model="item.fkko"
           hide-bottom-space
-          :rules="[ruleRequired]"
+          :rules="getRulesForField('fkko')"
           :company="item?.company"
-          :readonly="readonly || !item.company"
+          :readonly="readonly || !item.company || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         />
         <q-tooltip v-if="!item.company">
           Сначала выберите компанию
@@ -194,14 +221,14 @@
       <landfill-select
         v-model="item.landfill"
         hide-bottom-space
-        :rules="[ruleRequired]"
-        :readonly="readonly"
+        :rules="getRulesForField('landfill')"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
       />
 
 
       <q-file
         v-model="item.waste_image"
-        :readonly="readonly || !storeAuth.hasRole([RoleEnum.DISP, RoleEnum.OTV])"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OTV)"
         :max-files="1"
         :max-file-size="1024**3*10"
         accept="image/*"
@@ -323,11 +350,18 @@ const readonly = computed(() => {
 })
 
 const canEdit = computed(() => {
-  if (item.value?.approve_status == false){
-    return storeAuth.hasRole([RoleEnum.DISP])
+  if (item.value?.approve_status === false) {
+    return storeAuth.hasRole([RoleEnum.DISP]) || storeAuth.hasRole([RoleEnum.OTV])
   }
-  return storeAuth.hasRole([RoleEnum.OUTLEN, RoleEnum.BUH_EXT])
+  return storeAuth.hasRole([RoleEnum.OUTLEN, RoleEnum.BUH_EXT, RoleEnum.DISP, RoleEnum.OTV])
 })
+
+type FieldName = 'num' | 'car_model' | 'car_num' | 'company' | 'fkko' | 'landfill' | 'mass_empty' | 'mass_full' | 'ticket_volume' | 'actual_volume';
+
+const roleRules: Record<RoleEnum, FieldName[]> = {
+  [RoleEnum.OUTLEN]: ['num', 'car_model', 'car_num', 'company', 'fkko', 'landfill'],
+  [RoleEnum.DISP]: ['mass_empty', 'mass_full', 'ticket_volume', 'actual_volume'],
+};
 
 function loadData() {
   if (itemId.value == "new") {
@@ -336,6 +370,12 @@ function loadData() {
   }
   const prom = store.ticketLoad(parseInt(itemId.value))
   promiseSetLoading(prom, loading)
+}
+
+function getRulesForField(field: FieldName): Array<(val: any) => boolean | string> {
+  const currentRole = storeAuth.userRole;
+  const isFieldRequired = roleRules[currentRole]?.includes(field);
+  return isFieldRequired ? [ruleRequired] : [];
 }
 
 function saveData() {

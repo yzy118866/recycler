@@ -58,7 +58,7 @@ export default defineComponent({
     },
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       const payload = {
         username: this.login.username,
         password: this.login.password,
@@ -66,23 +66,33 @@ export default defineComponent({
 
       this.loading = true;
 
-      this.store
-        .login(payload)
-        .then(() => {
-          this.loading = false;
-          void this.$router.push({ name: 'index' });
-        })
-        .catch((err) => {
-          this.loading = false;
-          console.warn(err);
+      try {
+        await this.store.login(payload);
+        await this.store.loadAccountInfo();
 
+        // console.log("Текущая роль пользователя:", this.store.userRole);
+
+        if (!this.store.userRole) {
           this.$q.notify({
             type: 'negative',
-            message: 'Неверное имя пользователя или пароль',
-            icon: '',
-            progress: true,
+            message: 'Администратор ещё не дал вам роль',
+            icon: 'warning',
           });
+          await this.store.logout();
+          return;
+        }
+
+       await this.$router.push({ name: 'index' });
+      } catch (err) {
+        console.warn(err);
+        this.$q.notify({
+          type: 'negative',
+          message: 'Неверное имя пользователя или пароль',
+          progress: true,
         });
+      } finally {
+        this.loading = false;
+      }
     },
   },
 });

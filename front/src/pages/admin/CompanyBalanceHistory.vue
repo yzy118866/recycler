@@ -14,7 +14,7 @@
     </thead>
     <tbody>
       <tr
-        v-for="item of store.tickets"
+        v-for="item of archivedTickets"
         :key="item.id"
       >
         <td class="text-center">
@@ -38,7 +38,7 @@
 import { promiseSetLoading } from 'src/Modules/StoreCrud';
 import { formatDateTime } from 'src/Modules/Utils';
 import { useMainStore } from 'src/stores/main';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { TicketStatusEnum } from 'src/client';
 
 const props = defineProps({
@@ -49,8 +49,12 @@ const props = defineProps({
 })
 
 const store = useMainStore()
-
 const isLoading = ref(false)
+const archivedTickets = computed(() => {
+  return (store.tickets || []).filter(ticket => 
+    ticket.status === TicketStatusEnum.AR && ticket.approve_status !== false
+  );
+});
 
 function loadHistory(){
   const prom = store.ticketsLoad({
@@ -59,7 +63,6 @@ function loadHistory(){
   })
   promiseSetLoading(prom, isLoading)
 }
-
 
 onMounted(() => loadHistory())
 </script>

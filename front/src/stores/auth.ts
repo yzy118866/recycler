@@ -43,7 +43,7 @@ export const useAuthStore = defineStore("auth", {
       // Force actual user role
       const acc = state.account
       const accCached = state.cachedAccount
-      const roleActual = (acc?.role as TUserRole | undefined) || (accCached?.role as TUserRole | undefined) || RoleEnum.OTV
+      const roleActual = (acc?.role as TUserRole | undefined) || (accCached?.role as TUserRole | undefined) || null;
       return roleActual
     },
     userRole(state): TUserRole {

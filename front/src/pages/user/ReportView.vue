@@ -172,7 +172,7 @@ const readonly = computed(() => {
 })
 
 const canEdit = computed(() => {
-  return storeAuth.hasRole([RoleEnum.DISP])
+  return storeAuth.hasRole([RoleEnum.DISP, RoleEnum.BUH_EXT, RoleEnum.BUH_INN])
 })
 
 const printUrl = computed(() => {

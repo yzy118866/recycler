@@ -11,7 +11,7 @@
   <template v-if="store.hasRole([RoleEnum.ADMIN, RoleEnum.BUH_INN, RoleEnum.BUH_EXT])">
     <menu-item
       :to="{name: 'companies'}"
-      label="Компании"
+      label="Заказчики"
     />
   </template>
 
@@ -35,12 +35,17 @@
       label="Талоны в работе"
     />
     <menu-item
+      :to="{name: 'tickets_unload'}"
+      icon="local_shipping"
+      label="Талоны на выгрузке"
+      />
+    <menu-item
       :to="{name: 'tickets_archive'}"
       icon="archive"
       label="Талоны в архве"
     />
   </template>
-  <template v-if="store.hasRole([RoleEnum.ADMIN, RoleEnum.DISP])">
+  <template v-if="store.hasRole([RoleEnum.ADMIN, RoleEnum.DISP, RoleEnum.BUH_EXT, RoleEnum.BUH_INN])">
     <menu-item
       :to="{name: 'reports'}"
       icon="report"

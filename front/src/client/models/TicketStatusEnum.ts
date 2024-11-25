@@ -8,6 +8,7 @@
  * * `ar` - Архив
  * * `nc` - Несоответствие
  * * `er` - Ошибка
+ * * `pn` - На выгрузке
  */
 export enum TicketStatusEnum {
     CR = 'cr',
@@ -15,4 +16,5 @@ export enum TicketStatusEnum {
     AR = 'ar',
     NC = 'nc',
     ER = 'er',
+    PN = 'pn',
 }

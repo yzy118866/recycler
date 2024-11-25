@@ -12,4 +12,5 @@ export type UserRegister = {
     email?: string;
     password: string;
     readonly token: string;
+    
 };

@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="ticket_template",
                 to="recycler.company",
-                verbose_name="Компания",
+                verbose_name="Заказчик",
             ),
         ),
     ]

@@ -49,19 +49,24 @@ const model = computed({
 
 
 const options = computed(() => {
-  if (search.value){
-    return props.company?.fkko?.filter(code => code.code.indexOf(search.value) !== -1 || code.name.indexOf(search.value) !== -1) || []
+  if (search.value) {
+    return props.company?.fkko?.filter(code => 
+      code.code.indexOf(search.value) !== -1 || 
+      code.name.indexOf(search.value) !== -1 || 
+      code.security_class?.indexOf(search.value) !== -1
+    ) || []
   } else {
     return props.company?.fkko || []
   }
 })
+
 
 function optionLabel(option: FKKO | null){
   if (!option || Object.keys(option).length === 0
 ){
     return undefined
   }
-  return `${option.name} (${option.code} класс ${option.security_class || ''})`
+  return `${option.name} (${option.code} класс ${option.security_class || 'не указан'})`
 }
 
 function onFilter(value: string, update: CallableFunction){

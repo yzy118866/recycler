@@ -24,30 +24,47 @@
           <div>
             <nav-breadcrumbs>
               <q-breadcrumbs-el
-                :label="`Компания \'${store.companySelected.name}\'`"
+                :label="`Заказчик \'${store.companySelected.name}\'`"
               />
             </nav-breadcrumbs>
           </div>
         </div>
         <tickets-table
-          :filter-company="store.companySelected.id"
-          :filter-status="TicketStatusEnum.PR"
-          title="Талоны в работе"
+         v-if="role === RoleEnum.OTV"
+         class="q-mt-sm"
+         :filter-company="store.companySelected.id"
+         :filter-status="TicketStatusEnum.PN"
+         :create-btn="false"
+         title="Талоны на выгрузке"
         />
-        <tickets-table
-          class="q-mt-sm"
-          :filter-company="store.companySelected.id"
-          :filter-status="TicketStatusEnum.AR"
-          :create-btn="false"
-          title="Талоны в архиве"
-        />
-        <tickets-table
-          class="q-mt-sm"
-          :filter-company="store.companySelected.id"
-          :create-btn="false"
-          filter-author-current
-          title="Созданные талоны"
-        />
+        <template v-else>
+         <tickets-table
+           :filter-company="store.companySelected.id"
+           :filter-status="TicketStatusEnum.PR"
+           title="Талоны в работе"
+         />
+         <tickets-table
+           class="q-mt-sm"
+           :filter-company="store.companySelected.id"
+           :filter-status="TicketStatusEnum.PN"
+           :create-btn="false"
+           title="Талоны на выгрузке"
+         />
+         <tickets-table
+           class="q-mt-sm"
+           :filter-company="store.companySelected.id"
+           :filter-status="TicketStatusEnum.AR"
+           :create-btn="false"
+           title="Талоны в архиве"
+         />
+         <tickets-table
+           class="q-mt-sm"
+           :filter-company="store.companySelected.id"
+           :create-btn="false"
+           filter-author-current
+           title="Созданные талоны"
+         />
+        </template>
       </template>
       <select-company-screen v-else />
     </template>
@@ -61,9 +78,14 @@
             label="Талоны в работе"
           />
           <menu-item
+            :to="{name: 'tickets_unload'}"
+            icon="local_shipping"
+            label="Талоны на выгрузке"
+          />
+          <menu-item
             :to="{name: 'tickets_archive'}"
             icon="archive"
-            label="Талоны в архве"
+            label="Талоны в архиве"
           />
         </q-list>
       </div>

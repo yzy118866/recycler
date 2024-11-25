@@ -51,8 +51,9 @@ search?: string,
  * * `ar` - Архив
  * * `nc` - Несоответствие
  * * `er` - Ошибка
+ * * `pn` - На выгрузке
  */
-status?: 'ar' | 'cr' | 'er' | 'nc' | 'pr',
+status?: 'ar' | 'cr' | 'er' | 'nc' | 'pr' | 'pn',
 }): CancelablePromise<PaginatedTicketList> {
         return __request(OpenAPI, {
             method: 'GET',

@@ -17,14 +17,19 @@ def signal_company_contract_created(sender, instance, created, **kwargs):
 @receiver(pre_save, sender=Ticket)
 def signal_ticket_on_change(sender, instance: Ticket, **kwargs):
     if instance.id is None:
-        pass
-    else:
-        previous = Ticket.objects.get(id=instance.id)
-        if previous.status != instance.status:
-            logging.info(f"Ticket status change: {previous.status} => {instance.status}")
-            if instance.status == TicketStatus.ARCHIVE:
-                logging.info(f"Decreasing company balance: {instance.price_actual}")
-                instance.company.balance_decrease(instance.price_actual)
-            elif previous.status == TicketStatus.ARCHIVE:
-                logging.info(f"Increasing company balance: {instance.price_actual}")
-                instance.company.balance_increase(instance.price_actual)
+        return
+
+    previous = Ticket.objects.get(id=instance.id)
+
+    status_changed = previous.status != instance.status
+    approve_status_changed = previous.approve_status != instance.approve_status
+
+    if status_changed or approve_status_changed:
+
+        if previous.status == TicketStatus.ARCHIVE and previous.approve_status:
+            logging.info(f"Reverting balance due to status/approval change: +{previous.price_actual}")
+            previous.company.balance_increase(previous.price_actual)
+
+        if instance.status == TicketStatus.ARCHIVE and instance.approve_status:
+            logging.info(f"Decreasing balance for archived approved ticket: -{instance.price_actual}")
+            instance.company.balance_decrease(instance.price_actual)

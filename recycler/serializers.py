@@ -167,8 +167,8 @@ class TicketSerializer(AuthorSerializer, serializers.ModelSerializer):
     def create(self, validated_data):
         if company := validated_data["company"]:
             company: Company
-            if company.sum_actual is not None and company.sum_actual <= 0:
-                raise ValidationError("Недостаточный баланс компании")
+            if company.sum_actual is None or company.sum_actual <= 0:
+                raise ValidationError({"non_field_errors": ["Недостаточный баланс компании"]})
             validated_data["num"] = generate_ticket_num(company)
 
         return super().create(validated_data)
@@ -194,7 +194,7 @@ class TicketShortSerializer(serializers.ModelSerializer):
 
 class NonComplianceReportSerializer(AuthorSerializer, serializers.ModelSerializer):
     ticket = TicketSerializer(read_only=True)
-    ticket_id = serializers.PrimaryKeyRelatedField(queryset=Ticket.objects.all(), source="ticket", write_only=True)
+    ticket_id = serializers.PrimaryKeyRelatedField(queryset=Ticket.objects.all(), source="ticket", required=False, write_only=True)
     author = UserShortSerializer(required=False, read_only=True)
 
     class Meta:

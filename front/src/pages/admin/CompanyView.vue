@@ -2,10 +2,10 @@
   <q-page padding>
     <nav-top>
       <q-breadcrumbs-el
-        label="Компании"
+        label="Заказчики"
         :to="{name: 'companies'}"
       />
-      <q-breadcrumbs-el :label="`Компания ${item?.name || ''}`" />
+      <q-breadcrumbs-el :label="`Заказчик ${item?.name || ''}`" />
     </nav-top>
 
     <q-tabs
@@ -17,11 +17,11 @@
     >
       <q-tab
         name="contracts"
-        label="Договор"
+        label="Документы"
       />
       <q-tab
         name="company"
-        label="Компания"
+        label="Заказчик"
       />
       <q-tab
         name="fkko"
@@ -59,12 +59,6 @@
             <div>
               <key-value-info :data="infoData" />
             </div>
-            <div>
-              <div class="text-subtitle2 q-mb-sm">
-                История баланса
-              </div>
-              <company-balance-history :company="item.id" />
-            </div>
           </template>
 
           <q-input
@@ -78,7 +72,7 @@
 
           <q-input
             v-model="item.customer"
-            label="Заказчик"
+            label="ИНН"
             hide-bottom-space
             outlined
             dense
@@ -87,6 +81,14 @@
           <landfill-select
             v-model="item.landfill"
             hide-bottom-space
+            dense
+          />
+
+          <q-input
+            v-model="item.kpts"
+            label="КПТС"
+            hide-bottom-space
+            outlined
             dense
           />
 
@@ -171,7 +173,19 @@
         </div>
       </q-tab-panel>
       <q-tab-panel name="stats">
-        <tickets-table :filter-company="item?.id" />
+        <div>
+          <!-- История баланса -->
+          <div class="q-table__title q-mb-sm">
+            История баланса
+          </div>
+          <company-balance-history :company="item.id" />
+
+          <!-- Добавляем отступ -->
+          <div class="q-mt-lg"></div>
+
+          <!-- Таблица Талоны -->
+          <tickets-table :filter-company="item?.id" />
+        </div>
       </q-tab-panel>
     </q-tab-panels>
   </q-page>

@@ -23,7 +23,7 @@
 
   <fast-table
     ref="table"
-    title="Компании"
+    title="Заказчики"
     :columns="tableColumns"
     :data="data"
     :load="loadData"
@@ -72,6 +72,14 @@ const tableColumns = [
     field: 'contract_num',
     align: 'left',
     sortable: true,
+  },
+  {
+    name: 'inn',
+    label: 'ИНН',
+    field: 'customer',
+    align: 'left',
+    sortable: true,
+    style: 'width: 20px'
   },
 ]
 

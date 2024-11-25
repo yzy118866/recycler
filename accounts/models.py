@@ -39,7 +39,7 @@ class User(AbstractUser):
     company = models.ForeignKey(
         "recycler.Company",
         models.CASCADE,
-        verbose_name=_("Компания"),
+        verbose_name=_("Заказчик"),
         related_name="users",
         null=True,
         blank=True,

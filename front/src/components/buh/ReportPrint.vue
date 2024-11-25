@@ -9,7 +9,7 @@
       </div>
 
       <div class="text-container q-mt-lg">
-        Наименование Заказчика ___________ по договору № <u>{{ company?.contract_num || templ(10) }}</u> от {{ date.formatDate(company.contract_date, "DD.MM.YYYY") || templ(8) }}
+        Наименование Заказчика ___________ по договору <u>{{ company?.contract_num || templ(10) }}</u> от {{ date.formatDate(company.contract_date, "DD.MM.YYYY") || templ(8) }}
       </div>
 
       <div class="row justify-between text-container q-mt-md">
@@ -47,12 +47,14 @@
         <tbody>
           <tr>
             <td>
-              {{ ticket.short_name }}
-            </td>
-            <td>
               {{ ticket.fkko.name }}
             </td>
-            <td />
+            <td>
+              {{ ticket.fkko.code }}
+            </td>
+            <td>
+              т.
+            </td>
             <td />
           </tr>
         </tbody>

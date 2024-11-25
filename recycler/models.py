@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from decimal import Decimal, ROUND_HALF_UP
 
 User = get_user_model()
 
@@ -11,6 +12,7 @@ class TicketStatus(models.TextChoices):
     ARCHIVE = "ar", _("Архив")
     NON_COMPLIANCE = "nc", _("Несоответствие")
     ERROR = "er", _("Ошибка")
+    UNLOADING = "pn", _("На выгрузке")
 
 
 class CompanyStatus(models.TextChoices):
@@ -63,7 +65,8 @@ class Company(ModelDates):
         blank=True,
     )
 
-    customer = models.CharField(_("Заказчик"), max_length=100, null=True, blank=True)
+    customer = models.CharField(_("ИНН"), max_length=100, null=True, blank=True)
+    kpts = models.CharField(_("КПТС"), max_length=100, null=True, blank=True)
     contract_num = models.CharField(_("Номер договора"), max_length=100, null=True, blank=True)
     contract_date = models.DateField(_("Дата договора"), null=True, blank=True)
     sum_actual = models.FloatField(_("Сумма фактическая"), max_length=100, null=True, blank=True)
@@ -74,8 +77,8 @@ class Company(ModelDates):
     ticket_template: "TicketTemplate"
 
     class Meta:
-        verbose_name = _("Компания")
-        verbose_name_plural = _("Компании")
+        verbose_name = _("Заказчик")
+        verbose_name_plural = _("Заказчики")
 
     def __str__(self) -> str:
         return self.name
@@ -104,7 +107,7 @@ class CompanyContract(ModelDates):
     company = models.ForeignKey(
         Company,
         models.CASCADE,
-        verbose_name=_("Компания"),
+        verbose_name=_("Заказчик"),
         related_name="contracts",
     )
 
@@ -124,7 +127,7 @@ class FKKO(ModelDates):
     company = models.ForeignKey(
         Company,
         models.CASCADE,
-        verbose_name=_("Компания"),
+        verbose_name=_("Заказчик"),
         related_name="fkko",
     )
     contract = models.ForeignKey(
@@ -160,7 +163,7 @@ class TicketTemplate(BaseTicket):
     company = models.OneToOneField(
         Company,
         models.CASCADE,
-        verbose_name="Компания",
+        verbose_name="Заказчик",
         related_name="ticket_template",
     )
 
@@ -183,7 +186,7 @@ class Ticket(BaseTicket, ModelDates):
     company = models.ForeignKey(
         Company,
         models.CASCADE,
-        verbose_name="Компания",
+        verbose_name="Заказчик",
         related_name="tickets",
     )
     landfill = models.ForeignKey(
@@ -217,23 +220,16 @@ class Ticket(BaseTicket, ModelDates):
     def __str__(self):
         return f"#{self.pk}"
 
-    # @property
-    # def price_ticket(self):
-    #     if not self.ticket_volume or not self.fkko:
-    #         return 0
-
-    #     return (float(self.ticket_volume) / 1000) * self.fkko.price
-
     @property
     def mass_contents(self):
         return (self.mass_full or 0) - (self.mass_empty or 0)
 
     @property
-    def price_actual(self):
-        if not self.mass_full or not self.mass_empty or not self.fkko:
-            return 0
-
-        return (float(self.mass_contents)) * self.fkko.price
+    def price_actual(self) -> float:
+        if self.mass_full is None or self.mass_empty is None or self.fkko is None:
+            return 0.0
+        price = (self.mass_full - self.mass_empty) * self.fkko.price
+        return round(price, 3)
 
 
 class NonComplianceReport(ModelDates):
@@ -255,4 +251,4 @@ class NonComplianceReport(ModelDates):
     car_model = models.CharField(_("Наименование транспортного средства"), max_length=50, blank=True)
     car_num = models.CharField(_("Номер машины"), max_length=100, blank=True)
     car_driver = models.CharField(_("ФИО водителя"), max_length=100, blank=True)
-    description = models.TextField(_("Описание"), blank=True)
+    description = models.TextField(_("Описание отхода"), blank=True)

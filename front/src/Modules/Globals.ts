@@ -8,7 +8,7 @@ export const ruleValidEmail = (val: string) => {
 
 export const UserRoleNames: Map<RoleEnum, string> = new Map([
   [RoleEnum.ADMIN, "Администратор"],
-  [RoleEnum.BUH_INN, "Бухгалетр"],
+  [RoleEnum.BUH_INN, "Бухгалтер"],
   [RoleEnum.BUH_EXT, "Бухгалтер заказчика"],
   [RoleEnum.OUTLEN, "Отходообразователь"],
   [RoleEnum.DISP, "Диспетчер"],
@@ -22,4 +22,5 @@ export const TicketStatusNames: Map<TicketStatusEnum, string> = new Map([
   [TicketStatusEnum.AR, "Архив"],
   [TicketStatusEnum.NC, "Несоответствие"],
   [TicketStatusEnum.ER, "Ошибка"],
+  [TicketStatusEnum.PN, "На выгрузке"],
 ])

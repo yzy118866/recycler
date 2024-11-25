@@ -3,7 +3,7 @@
     v-model="model"
     :loading="loading"
     :options="companies || []"
-    label="Компания"
+    label="Заказчик"
     options-dense
     option-label="name"
     option-value="id"

@@ -74,8 +74,8 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "verbose_name": "Компания",
-                "verbose_name_plural": "Компании",
+                "verbose_name": "Заказчик",
+                "verbose_name_plural": "Заказчики",
             },
         ),
         migrations.CreateModel(
@@ -117,7 +117,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to="recycler.company",
-                        verbose_name="Компания",
+                        verbose_name="Заказчик",
                     ),
                 ),
             ],
@@ -162,7 +162,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="fkko",
                         to="recycler.company",
-                        verbose_name="Компания",
+                        verbose_name="Заказчик",
                     ),
                 ),
             ],
@@ -199,7 +199,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="contracts",
                         to="recycler.company",
-                        verbose_name="Компания",
+                        verbose_name="Заказчик",
                     ),
                 ),
             ],

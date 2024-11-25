@@ -23,9 +23,10 @@ export type Company = {
     readonly updated_at: string;
     name: string;
     readonly status: CompanyStatusEnum;
-    customer?: string | null;
+    customer?: number | null;
     contract_num?: string | null;
     contract_date?: string | null;
     sum_actual?: number | null;
     sum_overall?: number | null;
+    kpts?: string | null;
 };

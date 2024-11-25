@@ -81,7 +81,7 @@ const tableColumns = [
   {
     name: 'ticket',
     field: (row: NonComplianceReport) => {return row.ticket.num},
-    label: 'Тикет',
+    label: 'Талон',
     style: 'width: 20px'
   },
   {

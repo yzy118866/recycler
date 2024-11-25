@@ -79,6 +79,29 @@
           </q-popup-edit>
         </q-td>
       </template>
+      <template #body-cell-security_class="props_temp">
+        <q-td
+          key="security_class"
+          :props="props_temp"
+        >
+          {{ props_temp.value }}
+          <q-popup-edit
+            v-slot="scope"
+            v-model="props_temp.row.security_class"
+            title="Редактировать класс опасности"
+            auto-save
+          >
+            <q-input
+              v-model="scope.value"
+              type="text"
+              dense
+              autofocus
+              counter
+              @keyup.enter="scope.set"
+            />
+          </q-popup-edit>
+        </q-td>
+      </template>
       <template #body-cell-actions="props_temp">
         <q-td
           key="actions"
@@ -162,9 +185,16 @@ const columns: QTableProps["columns"] = [
   {
     name: 'price',
     field: 'price',
-    label: 'Цена',
+    label: 'Цена за тонну',
     style: 'width: 100px',
     align: 'left',
+  },
+  {
+    name: 'security_class',
+    field: 'security_class',
+    label: 'Класс опасности',
+    align: 'left',
+    style: 'width: 120px',
   },
   {
     name: 'actions',
@@ -176,7 +206,7 @@ const columns: QTableProps["columns"] = [
 ]
 
 function newCode(){
-  const newFKKO = Object.assign({}, defaultFKKO, {company: model.value.id})
+  const newFKKO = Object.assign({}, defaultFKKO, {company: model.value.id, security_class: ""})
   // @ts-expect-error custom creation
   model.value.fkko?.push(newFKKO)
 }

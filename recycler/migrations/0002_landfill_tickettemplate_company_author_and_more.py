@@ -118,7 +118,7 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="ticket_template",
                 to="recycler.company",
-                verbose_name="Шаблон тикета",
+                verbose_name="Шаблон талона",
             ),
         ),
         migrations.AlterField(
@@ -172,7 +172,7 @@ class Migration(migrations.Migration):
                     "car_driver",
                     models.CharField(blank=True, max_length=100, verbose_name="ФИО водителя"),
                 ),
-                ("description", models.TextField(blank=True, verbose_name="Описание")),
+                ("description", models.TextField(blank=True, verbose_name="Описание отхода")),
                 (
                     "author",
                     models.ForeignKey(
