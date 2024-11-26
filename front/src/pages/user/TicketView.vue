@@ -38,7 +38,8 @@
           </template>
           <template v-if="isExists && storeAuth.hasRole(RoleEnum.DISP)">
             <q-btn
-              v-if="item.status == TicketStatusEnum.PR"
+              v-if="storeAuth.hasRole(RoleEnum.DISP) && item.status == TicketStatusEnum.PR"
+              :disabled="!item.mass_full"
               icon="send"
               label="Отправить на выгрузку"
               color="secondary"
@@ -150,7 +151,7 @@
       />
       <q-input
         v-model="item.mass_full"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
+        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP) || item.approve_status !== null"
         type="number"
         hide-bottom-space
         :rules="getRulesForField('mass_full')"
@@ -165,7 +166,6 @@
         :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
-        :rules="getRulesForField('mass_empty')"
         autocomplete="off"
         label="Масса пустая"
         outlined
@@ -177,7 +177,6 @@
         :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
-        :rules="getRulesForField('ticket_volume')"
         autocomplete="off"
         label="Объём груза"
         outlined
@@ -189,7 +188,6 @@
         :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
-        :rules="getRulesForField('actual_volume')"
         autocomplete="off"
         label="Фактический объём груза"
         outlined
@@ -407,12 +405,22 @@ function saveData() {
 }
 
 function askUpdateTicketStatus(status: TicketStatusEnum){
+  if (status === TicketStatusEnum.AR && storeAuth.hasRole(RoleEnum.DISP)) {
+    if (!item.value?.mass_empty || !item.value?.ticket_volume || !item.value?.actual_volume) {
+      $q.notify({
+        type: 'negative',
+        message: 'Заполните поля: Масса пустая, Объём груза и Фактический объём груза перед закрытием талона.',
+      });
+      return;
+    }
+  }
+
   void $q.dialog({
-      message: "Вы уверены что хотите обновить статус талона?",
-      cancel: true,
-    }).onOk(() => {
-      updateTicketStatus(status)
-    })
+    message: 'Вы уверены, что хотите обновить статус талона?',
+    cancel: true,
+  }).onOk(() => {
+    updateTicketStatus(status);
+  });
 }
 function updateTicketStatus(status: TicketStatusEnum){
   if (!item.value?.id){
