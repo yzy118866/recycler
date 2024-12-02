@@ -42,7 +42,7 @@
     <menu-item
       :to="{name: 'tickets_archive'}"
       icon="archive"
-      label="Талоны в архве"
+      label="Талоны в архиве"
     />
   </template>
   <template v-if="store.hasRole([RoleEnum.ADMIN, RoleEnum.DISP, RoleEnum.BUH_EXT, RoleEnum.BUH_INN])">

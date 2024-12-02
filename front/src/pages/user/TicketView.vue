@@ -122,7 +122,7 @@
 
       <q-input
         v-model="item.num"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
         :rules="getRulesForField('item.num')"
         autocomplete="off"
@@ -132,7 +132,7 @@
 
       <q-input
         v-model="item.car_model"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
         :rules="getRulesForField('car_model')"
         autocomplete="off"
@@ -142,7 +142,7 @@
 
       <q-input
         v-model="item.car_num"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
         :rules="getRulesForField('car_num')"
         autocomplete="off"
@@ -151,7 +151,7 @@
       />
       <q-input
         v-model="item.mass_full"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP) || item.approve_status !== null"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.DISP) || item.approve_status !== null"
         type="number"
         hide-bottom-space
         :rules="getRulesForField('mass_full')"
@@ -163,7 +163,7 @@
       />
       <q-input
         v-model="item.mass_empty"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
         autocomplete="off"
@@ -174,7 +174,7 @@
       />
       <q-input
         v-model="item.ticket_volume"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
         autocomplete="off"
@@ -185,7 +185,7 @@
       />
       <q-input
         v-model="item.actual_volume"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
         autocomplete="off"
@@ -199,7 +199,7 @@
         v-model="item.company"
         hide-bottom-space
         :rules="getRulesForField('company')"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
       />
 
       <div>
@@ -209,7 +209,7 @@
           hide-bottom-space
           :rules="getRulesForField('fkko')"
           :company="item?.company"
-          :readonly="readonly || !item.company || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+          :readonly="readonly || item.status === TicketStatusEnum.AR || !item.company || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         />
         <q-tooltip v-if="!item.company">
           Сначала выберите компанию
@@ -220,13 +220,13 @@
         v-model="item.landfill"
         hide-bottom-space
         :rules="getRulesForField('landfill')"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
       />
 
 
       <q-file
         v-model="item.waste_image"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OTV)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OTV)"
         :max-files="1"
         :max-file-size="1024**3*10"
         accept="image/*"
@@ -344,15 +344,18 @@ const defaultData = {
 }
 
 const readonly = computed(() => {
-  return !canEdit.value
-})
+  return item.value?.status === TicketStatusEnum.AR || !canEdit.value;
+});
 
 const canEdit = computed(() => {
-  if (item.value?.approve_status === false) {
-    return storeAuth.hasRole([RoleEnum.DISP]) || storeAuth.hasRole([RoleEnum.OTV])
+  if (item.value?.status === TicketStatusEnum.AR) {
+    return false;
   }
-  return storeAuth.hasRole([RoleEnum.OUTLEN, RoleEnum.BUH_EXT, RoleEnum.DISP, RoleEnum.OTV])
-})
+  if (item.value?.approve_status === false) {
+    return storeAuth.hasRole([RoleEnum.DISP]) || storeAuth.hasRole([RoleEnum.OTV]);
+  }
+  return storeAuth.hasRole([RoleEnum.OUTLEN, RoleEnum.BUH_EXT, RoleEnum.DISP, RoleEnum.OTV]);
+});
 
 type FieldName = 'num' | 'car_model' | 'car_num' | 'company' | 'fkko' | 'landfill' | 'mass_empty' | 'mass_full' | 'ticket_volume' | 'actual_volume';
 
