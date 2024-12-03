@@ -22,7 +22,7 @@
       label="Талоны все"
     />
   </template>
-  <template v-if="store.hasRole([RoleEnum.OUTLEN, RoleEnum.MAN])">
+  <template v-if="store.hasRole([RoleEnum.MAN])">
     <menu-item
       :to="{name: 'tickets_authored'}"
       label="Созданные талоны"

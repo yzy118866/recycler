@@ -122,7 +122,7 @@
 
       <q-input
         v-model="item.num"
-        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
         :rules="getRulesForField('item.num')"
         autocomplete="off"
@@ -132,7 +132,7 @@
 
       <q-input
         v-model="item.car_model"
-        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
         :rules="getRulesForField('car_model')"
         autocomplete="off"
@@ -142,7 +142,7 @@
 
       <q-input
         v-model="item.car_num"
-        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
         :rules="getRulesForField('car_num')"
         autocomplete="off"
@@ -199,7 +199,7 @@
         v-model="item.company"
         hide-bottom-space
         :rules="getRulesForField('company')"
-        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
       />
 
       <div>
@@ -209,7 +209,7 @@
           hide-bottom-space
           :rules="getRulesForField('fkko')"
           :company="item?.company"
-          :readonly="readonly || item.status === TicketStatusEnum.AR || !item.company || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+          :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !item.company || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         />
         <q-tooltip v-if="!item.company">
           Сначала выберите компанию
@@ -220,7 +220,7 @@
         v-model="item.landfill"
         hide-bottom-space
         :rules="getRulesForField('landfill')"
-        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
       />
 
 
