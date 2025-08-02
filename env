@@ -1,0 +1,14 @@
+# .gitignore
+.env
+
+DJANGO_SECRET_KEY=секретный ключ
+DEBUG=True
+PRODUCTION=False
+HOSTNAME_OVERRIDE=белыйip
+ALLOWED_HOSTS=белыйip,localhost
+TRUSTED_ORIGINS=http://белыйip,http://серыйip
+DB_ENGINE=django.db.backends.sqlite3
+DB_NAME=db.sqlite3
+HUEY_CLASS=huey.SqliteHuey
+
+#rename .env

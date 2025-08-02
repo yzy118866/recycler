@@ -36,7 +36,7 @@ def extract_contract_number(document):
 
 def parse_fkko(contract: CompanyContract):
     """Parse FKKO list from docx file tables"""
-    
+
     file_path = contract.file.path
     file_ext = os.path.splitext(file_path)[1]
 
@@ -73,7 +73,7 @@ def parse_fkko(contract: CompanyContract):
     for table in document.tables:
         for i, row in enumerate(table.rows):
             cell_texts = list(cell.text.strip() for cell in row.cells)
-            
+
             if len(cell_texts) == 7:
                 try:
                     name = cell_texts[1]

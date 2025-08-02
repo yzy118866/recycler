@@ -5,10 +5,10 @@
       </div>
     </div>
   </template>
-  
+
   <script setup lang="ts">
   </script>
-  
+
   <style scoped>
   .window-width {
     width: 100vw;

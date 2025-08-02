@@ -31,14 +31,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
-    "django-insecure-howtwouf6vhbfj=l&ex7#=r&cyoa71a%psow10_b2_q&d0s_dq",
+    "секретный ключ",
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", False)
 PRODUCTION = os.environ.get("PRODUCTION", False)
 
-default_hosts = ["178.140.94.173", "localhost"]
+default_hosts = ["<АЙПИ АДРЕС>", "localhost"]
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", ",".join(default_hosts)).split(",")
 USE_X_FORWARDED_HOST = True
 HOSTNAME_OVERRIDE = os.getenv("HOSTNAME_OVERRIDE", None)
@@ -98,10 +98,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://178.140.94.173",
-    "http://192.168.0.12",
-    "http://178.140.94.173:8088",
-    "https://178.140.94.173:8088",
+    "http://АЙПИ АДРЕС",
+    "http://серыйip",
+    "http://АЙПИ АДРЕС:8088",
+    "https://АЙПИ АДРЕС:8088",
     *getenv_list("TRUSTED_ORIGINS"),
 ]
 

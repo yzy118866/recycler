@@ -11,7 +11,7 @@ from recycler.tasks import task_parse_contract_fkko
 def signal_landfill_on_change(sender, instance, **kwargs):
     if instance.id is None:
         return
-    
+
     previous = Landfill.objects.get(id=instance.id)
     if previous.name != instance.name or previous.location != instance.location:
         logging.info(f"Landfill updated: {previous.name} -> {instance.name}")
@@ -20,7 +20,7 @@ def signal_landfill_on_change(sender, instance, **kwargs):
 def signal_non_compliance_on_change(sender, instance, **kwargs):
     if instance.id is None:
         return
-    
+
     previous = NonComplianceReport.objects.get(id=instance.id)
     if previous.description != instance.description:
         logging.info(f"Non-compliance report updated: {previous.description} -> {instance.description}")
