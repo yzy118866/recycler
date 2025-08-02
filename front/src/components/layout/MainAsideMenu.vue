@@ -22,7 +22,7 @@
       label="Талоны все"
     />
   </template>
-  <template v-if="store.hasRole([RoleEnum.OUTLEN, RoleEnum.MAN])">
+  <template v-if="store.hasRole([RoleEnum.MAN])">
     <menu-item
       :to="{name: 'tickets_authored'}"
       label="Созданные талоны"
@@ -42,7 +42,7 @@
     <menu-item
       :to="{name: 'tickets_archive'}"
       icon="archive"
-      label="Талоны в архве"
+      label="Талоны в архиве"
     />
   </template>
   <template v-if="store.hasRole([RoleEnum.ADMIN, RoleEnum.DISP, RoleEnum.BUH_EXT, RoleEnum.BUH_INN])">

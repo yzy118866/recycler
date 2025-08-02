@@ -104,7 +104,7 @@
             v-model="item.sum_actual"
             :readonly="summReadonly"
             type="number"
-            label="Сумма фактическая"
+            label="Сумма фактическая (руб)"
             hide-bottom-space
             outlined
             dense
@@ -114,7 +114,7 @@
             v-model="item.sum_overall"
             :readonly="summReadonly"
             type="number"
-            label="Сумма договора"
+            label="Сумма договора (руб)"
             hide-bottom-space
             outlined
             dense

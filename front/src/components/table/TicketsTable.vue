@@ -322,7 +322,7 @@ const tableColumns: ComputedRef<QTableProps["columns"]> = computed(() => {
 })
 
 const canCreate = computed(() => {
-  return storeAuth.hasRole([RoleEnum.BUH_EXT, RoleEnum.OUTLEN])
+  return storeAuth.hasRole([RoleEnum.OUTLEN])
 })
 
 function loadData(payload: object){

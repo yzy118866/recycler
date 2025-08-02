@@ -174,7 +174,7 @@ class TicketTemplate(BaseTicket):
 
 class Ticket(BaseTicket, ModelDates):
     num = models.CharField(_("Номер талона"), max_length=50, null=True, blank=True, unique=True)
-    car_model = models.CharField(_("Номер машины"), max_length=100, blank=True)
+    car_model = models.CharField(_("Марка машины"), max_length=100, blank=True)
     author = models.ForeignKey(
         User,
         models.SET_NULL,

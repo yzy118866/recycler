@@ -38,7 +38,8 @@
           </template>
           <template v-if="isExists && storeAuth.hasRole(RoleEnum.DISP)">
             <q-btn
-              v-if="item.status == TicketStatusEnum.PR"
+              v-if="storeAuth.hasRole(RoleEnum.DISP) && item.status == TicketStatusEnum.PR"
+              :disabled="!item.mass_full"
               icon="send"
               label="Отправить на выгрузку"
               color="secondary"
@@ -121,7 +122,7 @@
 
       <q-input
         v-model="item.num"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
         :rules="getRulesForField('item.num')"
         autocomplete="off"
@@ -131,7 +132,7 @@
 
       <q-input
         v-model="item.car_model"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
         :rules="getRulesForField('car_model')"
         autocomplete="off"
@@ -141,7 +142,7 @@
 
       <q-input
         v-model="item.car_num"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         hide-bottom-space
         :rules="getRulesForField('car_num')"
         autocomplete="off"
@@ -150,7 +151,7 @@
       />
       <q-input
         v-model="item.mass_full"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.DISP) || item.approve_status !== null"
         type="number"
         hide-bottom-space
         :rules="getRulesForField('mass_full')"
@@ -162,10 +163,9 @@
       />
       <q-input
         v-model="item.mass_empty"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
-        :rules="getRulesForField('mass_empty')"
         autocomplete="off"
         label="Масса пустая"
         outlined
@@ -174,10 +174,9 @@
       />
       <q-input
         v-model="item.ticket_volume"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
-        :rules="getRulesForField('ticket_volume')"
         autocomplete="off"
         label="Объём груза"
         outlined
@@ -186,10 +185,9 @@
       />
       <q-input
         v-model="item.actual_volume"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.DISP)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.DISP)"
         type="number"
         hide-bottom-space
-        :rules="getRulesForField('actual_volume')"
         autocomplete="off"
         label="Фактический объём груза"
         outlined
@@ -201,7 +199,7 @@
         v-model="item.company"
         hide-bottom-space
         :rules="getRulesForField('company')"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
       />
 
       <div>
@@ -211,7 +209,7 @@
           hide-bottom-space
           :rules="getRulesForField('fkko')"
           :company="item?.company"
-          :readonly="readonly || !item.company || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+          :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !item.company || !storeAuth.hasRole(RoleEnum.OUTLEN)"
         />
         <q-tooltip v-if="!item.company">
           Сначала выберите компанию
@@ -222,13 +220,13 @@
         v-model="item.landfill"
         hide-bottom-space
         :rules="getRulesForField('landfill')"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OUTLEN)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || item.status === TicketStatusEnum.PN || !storeAuth.hasRole(RoleEnum.OUTLEN)"
       />
 
 
       <q-file
         v-model="item.waste_image"
-        :readonly="readonly || !storeAuth.hasRole(RoleEnum.OTV)"
+        :readonly="readonly || item.status === TicketStatusEnum.AR || !storeAuth.hasRole(RoleEnum.OTV)"
         :max-files="1"
         :max-file-size="1024**3*10"
         accept="image/*"
@@ -346,15 +344,18 @@ const defaultData = {
 }
 
 const readonly = computed(() => {
-  return !canEdit.value
-})
+  return item.value?.status === TicketStatusEnum.AR || !canEdit.value;
+});
 
 const canEdit = computed(() => {
-  if (item.value?.approve_status === false) {
-    return storeAuth.hasRole([RoleEnum.DISP]) || storeAuth.hasRole([RoleEnum.OTV])
+  if (item.value?.status === TicketStatusEnum.AR) {
+    return false;
   }
-  return storeAuth.hasRole([RoleEnum.OUTLEN, RoleEnum.BUH_EXT, RoleEnum.DISP, RoleEnum.OTV])
-})
+  if (item.value?.approve_status === false) {
+    return storeAuth.hasRole([RoleEnum.DISP]) || storeAuth.hasRole([RoleEnum.OTV]);
+  }
+  return storeAuth.hasRole([RoleEnum.OUTLEN, RoleEnum.BUH_EXT, RoleEnum.DISP, RoleEnum.OTV]);
+});
 
 type FieldName = 'num' | 'car_model' | 'car_num' | 'company' | 'fkko' | 'landfill' | 'mass_empty' | 'mass_full' | 'ticket_volume' | 'actual_volume';
 
@@ -407,12 +408,22 @@ function saveData() {
 }
 
 function askUpdateTicketStatus(status: TicketStatusEnum){
+  if (status === TicketStatusEnum.AR && storeAuth.hasRole(RoleEnum.DISP)) {
+    if (!item.value?.mass_empty || !item.value?.ticket_volume || !item.value?.actual_volume) {
+      $q.notify({
+        type: 'negative',
+        message: 'Заполните поля: Масса пустая, Объём груза и Фактический объём груза перед закрытием талона.',
+      });
+      return;
+    }
+  }
+
   void $q.dialog({
-      message: "Вы уверены что хотите обновить статус талона?",
-      cancel: true,
-    }).onOk(() => {
-      updateTicketStatus(status)
-    })
+    message: 'Вы уверены, что хотите обновить статус талона?',
+    cancel: true,
+  }).onOk(() => {
+    updateTicketStatus(status);
+  });
 }
 function updateTicketStatus(status: TicketStatusEnum){
   if (!item.value?.id){

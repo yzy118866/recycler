@@ -185,7 +185,7 @@ const columns: QTableProps["columns"] = [
   {
     name: 'price',
     field: 'price',
-    label: 'Цена за тонну',
+    label: 'Цена за тонну (руб)',
     style: 'width: 100px',
     align: 'left',
   },
